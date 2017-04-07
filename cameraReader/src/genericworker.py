@@ -33,8 +33,12 @@ import RoboCompCommonBehavior
 preStr = "-I/opt/robocomp/interfaces/ -I"+ROBOCOMP+"/interfaces/ --all /opt/robocomp/interfaces/"
 Ice.loadSlice(preStr+"peopleTracker3d.ice")
 from peopleTracker3dMod import *
+preStr = "-I/opt/robocomp/interfaces/ -I"+ROBOCOMP+"/interfaces/ --all /opt/robocomp/interfaces/"
+Ice.loadSlice(preStr+"hallStatus.ice")
+from hallStatusComp import *
 
 
+from peoplehallI import *
 
 
 class GenericWorker(QtCore.QObject):

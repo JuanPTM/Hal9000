@@ -186,6 +186,11 @@ if __name__ == '__main__':
 		worker = SpecificWorker(mprx)
 		worker.setParams(parameters)
 
+	adapter = ic.createObjectAdapter('peopleHall')
+	adapter.add(peopleHallI(worker), ic.stringToIdentity('peoplehall'))
+	adapter.activate()
+
+
 	signal.signal(signal.SIGINT, signal.SIG_DFL)
 	app.exec_()
 

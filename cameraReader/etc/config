@@ -5,6 +5,7 @@ peopletracker3d3Proxy=Tracker3D:tcp -h 10.253.247.24 -p 9997
 peopletracker3d4Proxy=Tracker3D:tcp -h 10.253.247.25 -p 9997
 #peopletracker3d1Proxy = peopletracker3d:tcp -h localhost -p 0
 
+peopleHall.Endpoints=tcp -p 19035
 
 
 # This property is used by the clients to connect to IceStorm.

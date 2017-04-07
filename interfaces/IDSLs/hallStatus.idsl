@@ -1,0 +1,40 @@
+/*
+ *
+ *  Authors : Juan Pedro Torres Muñoz <jutorresm@alumnos.unex.es>
+ *
+ */
+
+
+module hallStatusComp {  
+	 struct PlayerPos{
+             float x;
+             float y;
+             float z;
+        };
+
+        sequence<PlayerPos> Positions;
+
+        struct PersonInfo{
+                Positions pos;
+                bool predicted;
+                long id;
+        };
+
+	sequence<PersonInfo> People;	
+
+	struct camData{
+		People data;
+	};
+
+	sequence<camData> camsData;	
+
+	struct hallData{
+		camsData data;
+	};
+
+	interface peopleHall{
+
+		idempotent hallData getData();
+		
+	};
+};
