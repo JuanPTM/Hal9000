@@ -34,6 +34,8 @@ class SpecificWorker(GenericWorker):
 		self.timer.timeout.connect(self.compute)
 		self.Period = 500
 		self.timer.start(self.Period)
+		self.halldata = hallData()
+		self.camaras = [self.peopletrackerCam22_proxy,self.peopletrackerCam23_proxy,self.peopletrackerCam24_proxy,self.peopletrackerCam25_proxy]
 
 	def setParams(self, params):
 		#try:
@@ -46,10 +48,10 @@ class SpecificWorker(GenericWorker):
 	@QtCore.Slot()
 	def compute(self):
 #		print 'SpecificWorker.compute...'
-		print str(len(self.peopletrackerCam22_proxy.getData().data)) + " EN .22"
-		print str(len(self.peopletrackerCam23_proxy.getData().data)) + " EN .23"
-		print str(len(self.peopletrackerCam24_proxy.getData().data)) + " EN .24"
-		print str(len(self.peopletrackerCam25_proxy.getData().data)) + " EN .25\n"
+		self.halldata.data = []
+		for c in self.camaras:
+		  self.halldata.data.append(self.filterData(c.getData()))
+
 		#computeCODE
 		#try:
 		#	self.differentialrobot_proxy.setSpeedBase(100, 0)
@@ -65,4 +67,32 @@ class SpecificWorker(GenericWorker):
 		# print r[0], r[1], r[2]
 
 		return True
+	
+	
+	def filterData(self, peopledata):
+		dataCam = camData()
+		dataCam.data = []
+		for people in peopledata.data:
+			nPeople = PersonInfo()
+			nPeople.pos = []
+			for pos in people.pos:
+			  pPos = PlayerPos()
+			  pPos.x = pos.x
+			  pPos.y = pos.y
+			  pPos.z = pos.z 
+			  nPeople.pos.append(pPos)
+			nPeople.id = people.id
+			nPeople.predicted = people.predicted
+			dataCam.data.append(nPeople)
+		return dataCam
 
+####### INTERFACE METHOD
+
+	#
+	# getData
+	#
+	def getData(self):
+		#
+		#implementCODE
+		#
+		return self.halldata
