@@ -1,0 +1,11 @@
+import "/robocomp/interfaces/IDSLs/peopleTracker3d.idsl";
+
+Component cameraReader
+{
+	Communications
+	{
+		requires peopletracker3d, peopletracker3d, peopletracker3d, peopletracker3d;
+	};
+	language Python;
+};
+
