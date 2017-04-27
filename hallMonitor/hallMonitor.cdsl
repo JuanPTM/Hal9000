@@ -1,0 +1,12 @@
+import "/robocomp/interfaces/IDSLs/hallStatus.idsl";
+
+Component hallMonitor
+{
+	Communications
+	{
+		requires peopleHall;
+	};
+	language Python;
+	gui Qt(QWidget);
+};
+
