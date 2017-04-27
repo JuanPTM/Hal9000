@@ -49,8 +49,8 @@ class SpecificWorker(GenericWorker):
 	def compute(self):
 #		print 'SpecificWorker.compute...'
 		self.halldata.data = []
-		for c in self.camaras:
-		  self.halldata.data.append(self.filterData(c.getData()))
+		for c in range(len(self.camaras)):
+		  self.halldata.data += self.filterData(self.camaras[c].getData(),c)
 
 		#computeCODE
 		#try:
@@ -69,22 +69,26 @@ class SpecificWorker(GenericWorker):
 		return True
 	
 	
-	def filterData(self, peopledata):
-		dataCam = camData()
-		dataCam.data = []
+	def filterData(self, peopledata, idCam):
+		peopleList = []
 		for people in peopledata.data:
 			nPeople = PersonInfo()
-			nPeople.pos = []
+			nPeople.pos = PlayerPos()
+			nPeople.pos.x = 0
+			nPeople.pos.y = 0
+			nPeople.pos.z = 0
 			for pos in people.pos:
-			  pPos = PlayerPos()
-			  pPos.x = pos.x
-			  pPos.y = pos.y
-			  pPos.z = pos.z 
-			  nPeople.pos.append(pPos)
+			  nPeople.pos.x += pos.x
+			  nPeople.pos.y += pos.y
+			  nPeople.pos.z += pos.z 
+			nPeople.pos.x = nPeople.pos.x / len(people.pos)
+			nPeople.pos.y = nPeople.pos.y / len(people.pos)
+			nPeople.pos.z = nPeople.pos.z / len(people.pos)
+			nPeople.idCam = idCam
 			nPeople.id = people.id
 			nPeople.predicted = people.predicted
-			dataCam.data.append(nPeople)
-		return dataCam
+			peopleList.append(nPeople)
+		return peopleList
 
 ####### INTERFACE METHOD
 
