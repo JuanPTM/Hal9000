@@ -16,22 +16,19 @@ module hallStatusComp
 		 float y;
 		 float z;
 	};
-	sequence <PlayerPos> Positions;
+
 	struct PersonInfo
 	{
-		 Positions pos;
+		 PlayerPos pos;
 		 bool predicted;
 		 long id;
+		 int idCam;
 	};
 	sequence <PersonInfo> People;
-	struct camData
-	{
-		 People data;
-	};
-	sequence <camData> camsData;
+
 	struct hallData
 	{
-		 camsData data;
+		 People data;
 	};
 	interface peopleHall
 	{

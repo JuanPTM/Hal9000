@@ -5,36 +5,31 @@
  */
 
 
-module hallStatusComp {  
-	 struct PlayerPos{
-             float x;
-             float y;
-             float z;
-        };
-
-        sequence<PlayerPos> Positions;
-
-        struct PersonInfo{
-                Positions pos;
-                bool predicted;
-                long id;
-        };
-
-	sequence<PersonInfo> People;	
-
-	struct camData{
-		People data;
+module hallStatusComp
+{
+	struct PlayerPos
+	{
+		 float x;
+		 float y;
+		 float z;
 	};
 
-	sequence<camData> camsData;	
-
-	struct hallData{
-		camsData data;
+	struct PersonInfo
+	{
+		 PlayerPos pos;
+		 bool predicted;
+		 long id;
+		 int idCam;
 	};
+	sequence <PersonInfo> People;
 
-	interface peopleHall{
-
-		idempotent hallData getData();
-		
+	struct hallData
+	{
+		 People data;
 	};
+	interface peopleHall
+	{
+		idempotent hallData getData ();
+	};
+};
 };
