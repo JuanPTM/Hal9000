@@ -35,6 +35,9 @@ class SpecificWorker(GenericWorker):
 		self.timer.timeout.connect(self.compute)
 		self.Period = 1000
 		self.timer.start(self.Period)
+		self.idGlobal = 0
+		self.listaPersonas = []
+		
 
 	def setParams(self, params):
 		#try:
@@ -49,10 +52,16 @@ class SpecificWorker(GenericWorker):
 		print 'SpecificWorker.compute...'
 		halldata =  self.peoplehall_proxy.getData()
 		nuevaLista = halldata.data
-		if len(nuevaLista) > 0:
-		   i = individuo.fromData(nuevaLista[0].pos,nuevaLista[0].predicted,nuevaLista[0].id,nuevaLista[0].idCam,55)
-		   print i
-		   
+		for persona in self.listaPersonas:
+			persona.update(nuevaLista)
+			persona.updateKalman()
+			if persona.kill():
+				self.listaPersonas.remove(persona)
+		for nPersona in nuevaLista:
+			self.listaPersonas.append(individuo.fromData(nPersona.pos,nPersona.predicted,nPersona.id,nPersona.idCam,self.idGlobal,nPersona.vol))
+			self.idGlobal= (self.idGlobal +1 ) % sys.maxint
+		print self.listaPersonas
+		
 		
 		#computeCODE
 		#try:
