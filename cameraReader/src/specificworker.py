@@ -87,6 +87,9 @@ class SpecificWorker(GenericWorker):
 			nPeople.idCam = idCam
 			nPeople.id = people.id
 			nPeople.predicted = people.predicted
+			nPeople.vol.x = people.size.x
+			nPeople.vol.y = people.size.y
+			nPeople.vol.z = people.size.z
 			peopleList.append(nPeople)
 		return peopleList
 
