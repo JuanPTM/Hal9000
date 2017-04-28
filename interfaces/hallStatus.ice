@@ -21,6 +21,7 @@ module hallStatusComp
 	{
 		 PlayerPos pos;
 		 bool predicted;
+		 PlayerPos vol;
 		 long id;
 		 int idCam;
 	};
