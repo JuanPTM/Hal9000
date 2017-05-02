@@ -62,6 +62,7 @@ class individuo():
 					self.predicted = persona.predicted
 					self.timestamp = time()
 					self.seen = True
+					return
 			else: # No es mi cam
 				if nonLocalDel:
 					if abs(self.vol - (persona.vol.x * persona.vol.y *persona.vol.z)) < (0.1 * self.vol): # ¿ Vol ?
@@ -74,6 +75,7 @@ class individuo():
 							self.timestamp = time()
 							self.seen = True
 							nonLocalDel = False
+							return
 							
 	      
 	
