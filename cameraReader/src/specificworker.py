@@ -84,6 +84,11 @@ class SpecificWorker(GenericWorker):
 			nPeople.pos.x = nPeople.pos.x / len(people.pos)
 			nPeople.pos.y = nPeople.pos.y / len(people.pos)
 			nPeople.pos.z = nPeople.pos.z / len(people.pos)
+		
+			nPeople.pos.x = people.pos[-1].x
+			nPeople.pos.y = people.pos[-1].y
+			nPeople.pos.z = people.pos[-1].z
+		
 			nPeople.idCam = idCam
 			nPeople.id = people.id
 			nPeople.predicted = people.predicted
