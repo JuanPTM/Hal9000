@@ -135,6 +135,11 @@ if __name__ == '__main__':
 		worker = SpecificWorker(mprx)
 		worker.setParams(parameters)
 
+	adapter = ic.createObjectAdapter('readHall')
+	adapter.add(readHallI(worker), ic.stringToIdentity('readhall'))
+	adapter.activate()
+
+
 	signal.signal(signal.SIGINT, signal.SIG_DFL)
 	app.exec_()
 

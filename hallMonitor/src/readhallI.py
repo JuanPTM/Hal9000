@@ -15,57 +15,34 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with RoboComp.  If not, see <http://www.gnu.org/licenses/>.
+#
 
-import sys, Ice, os
-from PySide import *
+import sys, os, Ice
 
 ROBOCOMP = ''
 try:
 	ROBOCOMP = os.environ['ROBOCOMP']
-except KeyError:
+except:
 	print '$ROBOCOMP environment variable not set, using the default value /opt/robocomp'
 	ROBOCOMP = '/opt/robocomp'
+if len(ROBOCOMP)<1:
+	print 'ROBOCOMP environment variable not set! Exiting.'
+	sys.exit()
+	
 
 preStr = "-I/opt/robocomp/interfaces/ -I"+ROBOCOMP+"/interfaces/ --all /opt/robocomp/interfaces/"
-Ice.loadSlice(preStr+"CommonBehavior.ice")
-import RoboCompCommonBehavior
 
-preStr = "-I/opt/robocomp/interfaces/ -I"+ROBOCOMP+"/interfaces/ --all /opt/robocomp/interfaces/"
 Ice.loadSlice(preStr+"hallStatus.ice")
-from hallStatusComp import *
-preStr = "-I/opt/robocomp/interfaces/ -I"+ROBOCOMP+"/interfaces/ --all /opt/robocomp/interfaces/"
-Ice.loadSlice(preStr+"readHall.ice")
 from readHallComp import *
 
+class readHallI(readHall):
+	def __init__(self, worker):
+		self.worker = worker
 
-from readhallI import *
-
-
-class GenericWorker(QtCore.QObject):
-	kill = QtCore.Signal()
-
-
-	def __init__(self, mprx):
-		super(GenericWorker, self).__init__()
+	def getHall(self, c):
+		return self.worker.getHall()
 
 
-		self.peoplehall_proxy = mprx["peopleHallProxy"]
-		
-		
-		self.mutex = QtCore.QMutex(QtCore.QMutex.Recursive)
-		self.Period = 30
-		self.timer = QtCore.QTimer(self)
 
 
-	@QtCore.Slot()
-	def killYourSelf(self):
-		rDebug("Killing myself")
-		self.kill.emit()
 
-	# \brief Change compute period
-	# @param per Period in ms
-	@QtCore.Slot(int)
-	def setPeriod(self, p):
-		print "Period changed", p
-		Period = p
-		timer.start(Period)

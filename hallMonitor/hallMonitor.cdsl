@@ -1,10 +1,12 @@
 import "/robocomp/interfaces/IDSLs/hallStatus.idsl";
+import "/robocomp/interfaces/IDSLs/readHall.idsl";
 
 Component hallMonitor
 {
 	Communications
 	{
 		requires peopleHall;
+		implements readHall;
 	};
 	language Python;
 	gui Qt(QWidget);
