@@ -37,9 +37,12 @@ class SpecificWorker(GenericWorker):
 		self.timer.start(self.Period)
 		self.idGlobal = 0
 		self.listaPersonas = []
+		self.multiDelete = False
 		
 
 	def setParams(self, params):
+		self.multiDelete = params["mask"]
+		self.dist=params["distRec"]
 		#try:
 		#	self.innermodel = InnerModel(params["InnerModelPath"])
 		#except:
@@ -49,7 +52,6 @@ class SpecificWorker(GenericWorker):
 
 	@QtCore.Slot()
 	def compute(self):
-		print 'SpecificWorker.compute...'
 		halldata =  self.peoplehall_proxy.getData()
 		nuevaLista = halldata.data
 		for persona in self.listaPersonas:
@@ -58,9 +60,16 @@ class SpecificWorker(GenericWorker):
 			if persona.kill():
 				self.listaPersonas.remove(persona)
 		for nPersona in nuevaLista:
-			self.listaPersonas.append(individuo.fromData(nPersona.pos,nPersona.predicted,nPersona.id,nPersona.idCam,self.idGlobal,nPersona.vol))
+			self.listaPersonas.append(individuo.fromData(nPersona.pos,
+						nPersona.predicted,
+						nPersona.id,
+						nPersona.idCam,
+						self.idGlobal,
+						nPersona.vol,
+						multiDelete=self.multiDelete,
+						distancia=self.distRec))
 			self.idGlobal= (self.idGlobal +1 ) % sys.maxint
-		print self.listaPersonas
+		
 		
 		
 		#computeCODE
@@ -79,3 +88,22 @@ class SpecificWorker(GenericWorker):
 
 		return True
 
+
+	#
+	# getHall
+	#
+	def getHall(self):
+		hallpersons = hallPersons()
+		hallpersons.data = []
+		for person in self.listaPersonas:
+			persona = PersonInfo()
+			persona.pos.x = person.pos[0]
+			persona.pos.y = person.pos[1]
+			persona.pos.z = 0
+			persona.id = person.idGlobal
+			hallpersons.data.append(persona)
+		ret = hallpersons
+		#
+		#implementCODE
+		#
+		return ret
