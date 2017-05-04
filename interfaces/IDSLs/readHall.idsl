@@ -1,0 +1,33 @@
+/*
+ *
+ *  Authors : Juan Pedro Torres Muñoz <jutorresm@alumnos.unex.es>
+ *
+ */
+
+
+module readHallComp
+{
+	struct Pos
+	{
+		 float x;
+		 float y;
+		 float z;
+	};
+
+	struct PersonInfo
+	{
+		 Pos pos;
+		 int id;
+	};
+	sequence <PersonInfo> People;
+
+	struct hallPersons
+	{
+		 People data;
+	};
+	interface readHall
+	{
+		idempotent hallPersons getHall ();
+	};
+};
+};
