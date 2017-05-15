@@ -9,7 +9,7 @@ readHall.Endpoints=tcp -p 20001
 TopicManager.Proxy=IceStorm/TopicManager:default -p 9999
 
 mask=True
-distRec=5000
+distRec=4500
 
 Ice.Warn.Connections=0
 Ice.Trace.Network=0

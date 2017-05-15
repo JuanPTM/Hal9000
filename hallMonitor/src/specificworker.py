@@ -33,7 +33,7 @@ class SpecificWorker(GenericWorker):
 	def __init__(self, proxy_map):
 		super(SpecificWorker, self).__init__(proxy_map)
 		self.timer.timeout.connect(self.compute)
-		self.Period = 1000
+		self.Period = 250
 		self.timer.start(self.Period)
 		self.idGlobal = 0
 		self.listaPersonas = []
@@ -42,7 +42,7 @@ class SpecificWorker(GenericWorker):
 
 	def setParams(self, params):
 		self.multiDelete = params["mask"]
-		self.dist=params["distRec"]
+		self.dist=float(params["distRec"])
 		#try:
 		#	self.innermodel = InnerModel(params["InnerModelPath"])
 		#except:
@@ -54,11 +54,18 @@ class SpecificWorker(GenericWorker):
 	def compute(self):
 		halldata =  self.peoplehall_proxy.getData()
 		nuevaLista = halldata.data
-		for persona in self.listaPersonas:
-			persona.update(nuevaLista)
-			persona.updateKalman()
-			if persona.kill():
-				self.listaPersonas.remove(persona)
+		listaBorrar = []
+		for index in range(len(self.listaPersonas)):
+			self.listaPersonas[index].update(nuevaLista)
+			self.listaPersonas[index].updateKalman()
+			if self.listaPersonas[index].kill():
+				#self.listaPersonas.remove(persona)
+				listaBorrar.append(index)
+		
+		count = 0
+		for index in listaBorrar:
+			self.listaPersonas.pop(index-count)
+			count += 1
 		for nPersona in nuevaLista:
 			self.listaPersonas.append(individuo.fromData(nPersona.pos,
 						nPersona.predicted,
@@ -67,9 +74,11 @@ class SpecificWorker(GenericWorker):
 						self.idGlobal,
 						nPersona.vol,
 						multiDelete=self.multiDelete,
-						distancia=self.distRec))
+						distancia=self.dist))
 			self.idGlobal= (self.idGlobal +1 ) % sys.maxint
-		
+		print "Numero de personas = ",len(self.listaPersonas)
+		print "*************************"
+
 		
 		
 		#computeCODE

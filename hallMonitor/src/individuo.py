@@ -49,7 +49,7 @@ class individuo():
 		self.Vx = 0
 		self.Vy = 0
 		self.maskMultiDel = False
-		self.distancia = 0
+		self.dist = 0
 		
     
 	@classmethod
@@ -68,18 +68,18 @@ class individuo():
 		clase.filtered_state_covariances = np.eye(4)
 		clase.Vx = 0
 		clase.Vy = 0
-		clase.distancia = distancia
+		clase.dist = float(distancia)
 		clase.maskMultiDel = multiDelete
 		return clase
     
 	def update(self, listaPersonas):
 		nonLocalDel = True
-		maskToErase = mask
+		maskToErase = [True,True,True,True]
 		self.seen = False
 		print "Actualizando id = ", self.idGlobal , "idLocal = ", self.idLocal
 		print self.vol ,self.pos ,self.idCam
-		print "-----------------------------"
 		print len(listaPersonas)
+		print "-----------------------------"
 		listaBorrar = []
 		for index in range(len(listaPersonas)):
 			print listaPersonas[index].id , self.distancia(listaPersonas[index].pos), listaPersonas[index].idCam, listaPersonas[index].pos
@@ -93,12 +93,11 @@ class individuo():
 					
 					if not self.maskMultiDel:
 						break
-					print "-----------------------------"
 					#return
 			else: # No es mi cam
 				if maskToErase[listaPersonas[index].idCam]: # Compruebo si puedo borrar
 					if True: #abs(self.vol - (listaPersonas[index].vol.x * listaPersonas[index].vol.y * listaPersonas[index].vol.z)) < (0.25 * self.vol): #  Vol 
-						if self.distancia(listaPersonas[index].pos) <= self.distancia: # Coor
+						if self.distancia(listaPersonas[index].pos) <= self.dist: # Coor
 							
 							#ACTUALIZAR PERSONA - CODIGO DE ABAJO
 							
@@ -108,12 +107,10 @@ class individuo():
 							
 							if not self.maskMultiDel:
 								break
-							print "-----------------------------"
 							#return
 		print "-----------------------------"
 		count = 0
 		for i in listaBorrar:
-			print i-count
 			
 			timeRead = time()
 			self.Vx = (listaPersonas[i-count].pos.x - self.pos[0] ) / ( timeRead - self.timestamp )
@@ -130,6 +127,7 @@ class individuo():
 			
 			listaPersonas.pop(i-count)
 			count += 1
+		print "##############################"
 	      
 	
 	def distancia(self,pos):
@@ -149,7 +147,9 @@ class individuo():
 		return
     
 	def kill(self):
-		return (time() - self.timestamp) > 10
+		if self.pos[0] > 24000. or self.pos[1] < 0 or self.pos[1] > 9500. or self.pos[0] < 3000. :
+			return True
+		return (time() - self.timestamp) > 2
 	
 	def __repr__(self):
 		return str(self)
