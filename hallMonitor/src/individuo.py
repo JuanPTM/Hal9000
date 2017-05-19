@@ -21,7 +21,7 @@ import numpy as np
 from pykalman import KalmanFilter
 
 
-transition_matrix = [[1, 0 , 1.5, 0],[0, 1 ,0 , 1.5], [0,0, 1,0],[0,0,0,1]]
+transition_matrix = [[1, 0 , 1, 0],[0, 1 ,0 , 1], [0,0, 1,0],[0,0,0,1]]
 transition_offset = [0, 0, 0, 0]
 observation_matrix = [[1, 0 ,0 , 0],[0, 1 ,0 , 0], [0,0, 1,0],[0,0,0,1]] #np.eye(4) #+ random_state.randn(2, 2) * 0.1
 observation_offset = [0, 0, 0, 0]
@@ -37,6 +37,7 @@ class individuo():
 		self.idGlobal = -1 
 		self.timestamp = time()
 		self.idCam = -1
+		self.ocurrencias = 0
 		self.vol = -1 # Volumen
 		self.seen = False # Flag update kalman
 		self.kf = KalmanFilter(
@@ -124,7 +125,7 @@ class individuo():
 			self.idCam = listaPersonas[i-count].idCam
 			self.idLocal = listaPersonas[i-count].id
 			self.seen = True
-			
+			self.ocurrencias += 1
 			listaPersonas.pop(i-count)
 			count += 1
 		print "##############################"
@@ -146,8 +147,11 @@ class individuo():
 			self.predicted = True
 		return
     
+	def isReal(self):
+		return self.seen
+    
 	def kill(self):
-		if self.pos[0] > 24000. or self.pos[1] < 0 or self.pos[1] > 9500. or self.pos[0] < 3000. :
+		if self.pos[0] > 27500. or self.pos[1] < 0 or self.pos[1] > 9500. or self.pos[0] < 3000. :
 			return True
 		return (time() - self.timestamp) > 2
 	
