@@ -33,10 +33,11 @@ class SpecificWorker(GenericWorker):
 	def __init__(self, proxy_map):
 		super(SpecificWorker, self).__init__(proxy_map)
 		self.timer.timeout.connect(self.compute)
-		self.Period = 250
+		self.Period = 500
 		self.timer.start(self.Period)
 		self.idGlobal = 0
 		self.listaPersonas = []
+		self.listaLectErr = []
 		self.multiDelete = False
 		
 
@@ -66,17 +67,45 @@ class SpecificWorker(GenericWorker):
 		for index in listaBorrar:
 			self.listaPersonas.pop(index-count)
 			count += 1
+			
+		listaBorrar = [] 
+		for index in range(len(self.listaLectErr)):
+			self.listaLectErr[index].update(nuevaLista)
+			self.listaLectErr[index].updateKalman()
+			if self.listaLectErr[index].isReal() and self.listaLectErr[index].ocurrencias > 4:
+				#self.listaPersonas.remove(persona)
+				listaBorrar.append(index)
+				self.listaPersonas.append(self.listaLectErr[index])
+			elif self.listaLectErr[index].kill():
+				listaBorrar.append(index)
+			
+		count = 0
+		for index in listaBorrar:
+			self.listaLectErr.pop(index-count)
+			count += 1
+			
 		for nPersona in nuevaLista:
-			self.listaPersonas.append(individuo.fromData(nPersona.pos,
-						nPersona.predicted,
-						nPersona.id,
-						nPersona.idCam,
-						self.idGlobal,
-						nPersona.vol,
-						multiDelete=self.multiDelete,
-						distancia=self.dist))
+			if(nPersona.pos.x < 22000 and nPersona.pos.x > 5000):
+				self.listaLectErr.append(individuo.fromData(nPersona.pos,
+							nPersona.predicted,
+							nPersona.id,
+							nPersona.idCam,
+							self.idGlobal,
+							nPersona.vol,
+							multiDelete=self.multiDelete,
+							distancia=self.dist))
+			else:
+				self.listaPersonas.append(individuo.fromData(nPersona.pos,
+							nPersona.predicted,
+							nPersona.id,
+							nPersona.idCam,
+							self.idGlobal,
+							nPersona.vol,
+							multiDelete=self.multiDelete,
+							distancia=self.dist))
 			self.idGlobal= (self.idGlobal +1 ) % sys.maxint
 		print "Numero de personas = ",len(self.listaPersonas)
+		print "Numero de lect. err = ",len(self.listaLectErr)
 		print "*************************"
 
 		
