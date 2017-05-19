@@ -32,7 +32,7 @@ class SpecificWorker(GenericWorker):
 	def __init__(self, proxy_map):
 		super(SpecificWorker, self).__init__(proxy_map)
 		self.timer.timeout.connect(self.compute)
-		self.Period = 500
+		self.Period = 200
 		self.timer.start(self.Period)
 		self.halldata = hallData()
 		self.camaras = [self.peopletrackerCam22_proxy,self.peopletrackerCam23_proxy,self.peopletrackerCam24_proxy,self.peopletrackerCam25_proxy]
@@ -50,7 +50,9 @@ class SpecificWorker(GenericWorker):
 #		print 'SpecificWorker.compute...'
 		self.halldata.data = []
 		for c in range(len(self.camaras)):
-		  self.halldata.data += self.filterData(self.camaras[c].getData(),c)
+			if c == 1:
+				continue
+			self.halldata.data += self.filterData(self.camaras[c].getData(),c)
 
 		#computeCODE
 		#try:
