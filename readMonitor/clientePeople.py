@@ -42,7 +42,7 @@ class main():
             # self.timer.start(100)
             self.timer2 = QtCore.QTimer()
             QtCore.QTimer.connect(self.timer2, QtCore.SIGNAL("timeout()"), self.leer)
-            self.timer2.start(100)
+            self.timer2.start(500)
 
             self.labelL = []
             self.itemL = []
